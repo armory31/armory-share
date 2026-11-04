@@ -96,9 +96,19 @@ export default function SharePage({ params, searchParams }: any) {
       }}>Descargar ARMORY</a>
 
       <script dangerouslySetInnerHTML={{ __html: `
-        setTimeout(function() {
-          window.location.href = 'armory:/' + window.location.pathname.substring(1);
-        }, 100);
+        (function() {
+          var path = "${internalPath}";
+          if (!path) return;
+          
+          // Intentar abrir la app usando el esquema correcto (doble barra)
+          var appUrl = "armory://" + path;
+          
+          // Usamos window.location.replace para intentar el deep link
+          // Si la app está instalada, saltará. Si no, se quedará aquí.
+          setTimeout(function() {
+            window.location.replace(appUrl);
+          }, 300); // Pequeño delay para asegurar que la página cargó
+        })();
       `}} />
     </div>
   );
