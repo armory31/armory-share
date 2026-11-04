@@ -105,9 +105,43 @@ export async function getServerSideProps({ params, query }) {
   const path = '/' + (params.path || []).join('/')
   const type = (params.path || [])[0] || 'song'
   const id = (params.path || [])[1] || ''
-  const title = query.t ? decodeURIComponent(query.t) : 'ARMORY'
-  const subtitle = query.s ? `Por ${decodeURIComponent(query.s)}` : 'Abre este enlace con la app ARMORY'
-  const image = query.i ? decodeURIComponent(query.i) : 'https://armory-19193.web.app/og-default.jpg'
+  
+  // Decodificar parámetros de forma segura
+  let title = 'ARMORY'
+  let subtitle = 'Abre este enlace con la app ARMORY'
+  let image = 'https://armory-19193.web.app/og-default.jpg'
+  
+  if (query.t) {
+    try {
+      title = decodeURIComponent(query.t.toString())
+    } catch(e) {}
+  }
+  if (query.s) {
+    try {
+      subtitle = `Por ${decodeURIComponent(query.s.toString())}`
+    } catch(e) {}
+  }
+  if (query.i) {
+    try {
+      const decodedImage = decodeURIComponent(query.i.toString())
+      // Validar que sea una URL válida de imagen
+      if (decodedImage.startsWith('https://') && 
+          (decodedImage.includes('yt3.googleusercontent.com') || 
+           decodedImage.includes('i.ytimg.com') ||
+           decodedImage.includes('lh3.googleusercontent.com'))) {
+        image = decodedImage
+      }
+    } catch(e) {}
+  }
 
-  return { props: { title, subtitle, image, type, id, path } }
+  return { 
+    props: { 
+      title, 
+      subtitle, 
+      image, 
+      type, 
+      id, 
+      path 
+    } 
+  }
 }
