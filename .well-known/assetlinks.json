@@ -1,0 +1,10 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "com.ruben.spotitube",
+    "sha256_cert_fingerprints": [
+      "BF:11:BD:8C:B2:E4:1D:06:46:F4:93:3B:3E:EE:2A:33:12:1A:99:8A:F0:60:46:EE:C5:BC:24:8E:5C:51:1F:2C"
+    ]
+  }
+}]
