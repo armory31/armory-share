@@ -4,7 +4,31 @@ import { Metadata } from 'next';
 export async function generateMetadata({ params, searchParams }: any): Promise<Metadata> {
   const path = params?.path || [];
   const type = path[0] || 'song';
-  
+    // === INICIO TOGETHER ===
+  if (type === 'together') {
+    const code = path[1] || '';
+    if (!/^\d{6}$/.test(code)) {
+      return { title: 'Enlace no válido', description: 'Código de sesión inválido' };
+    }
+    return {
+      title: 'Únete a mi sesión en ARMORY',
+      description: `Código: ${code}`,
+      openGraph: {
+        title: 'Únete a mi sesión en ARMORY',
+        description: `Código: ${code}`,
+        images: [{ url: 'https://armory-19193.web.app/og-default.jpg', width: 544, height: 544 }],
+        type: 'website',
+        url: `https://armory-share.vercel.app/together/${code}`,
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title: 'Únete a mi sesión en ARMORY',
+        description: `Código: ${code}`,
+        images: ['https://armory-19193.web.app/og-default.jpg'],
+      },
+    };
+  }
+  // === FIN TOGETHER ===
   let title = 'ARMORY';
   let description = 'Abre este enlace con la app ARMORY';
   let image = 'https://armory-19193.web.app/og-default.jpg'; 
@@ -73,7 +97,88 @@ export default function SharePage({ params, searchParams }: any) {
 
   // Construir la ruta interna limpia AQUÍ para usarla en el JSX y el Script
   const internalPathStr = pathArray.join('/');
+    // === INICIO TOGETHER ===
+  if (pathArray[0] === 'together') {
+    const togetherCode = pathArray[1] || '';
+    if (!/^\d{6}$/.test(togetherCode)) {
+      return (
+        <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#0a0a0a', color: '#fff', fontFamily: 'sans-serif', textAlign: 'center', padding: '2rem' }}>
+          <h1 style={{ color: '#c9a84c' }}>Código de sesión inválido</h1>
+        </div>
+      );
+    }
+    
+    const intentUrl = `intent://together/${togetherCode}#Intent;scheme=armory;package=com.ruben.spotitube;S.browser_fallback_url=${encodeURIComponent('https://armory31.github.io')};end`;
+    const directUrl = `armory://together/${togetherCode}`;
 
+    return (
+      <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: '#0a0a0a', color: '#fff', fontFamily: 'sans-serif', textAlign: 'center', padding: '2rem' }}>
+        <img src="https://armory-19193.web.app/og-default.jpg" alt="ARMORY" style={{ width: '160px', height: '160px', borderRadius: '12px', marginBottom: '2rem', boxShadow: '0 10px 40px rgba(201, 168, 76, 0.3)', objectFit: 'cover' }} />
+        <h1 style={{ fontSize: '1.8rem', fontWeight: 800, color: '#c9a84c', marginBottom: '0.5rem' }}>Únete a mi sesión en ARMORY</h1>
+        <p style={{ color: '#888', marginBottom: '1.5rem' }}>Código de la sala</p>
+        <div style={{ background: '#141414', border: '1px solid #c9a84c', borderRadius: '8px', padding: '1rem 2.5rem', marginBottom: '2rem' }}>
+          <span style={{ fontSize: '3rem', fontWeight: 900, color: '#c9a84c', letterSpacing: '0.5rem', fontFamily: 'monospace' }}>{togetherCode}</span>
+        </div>
+
+        <a href={intentUrl} style={{ display: 'inline-block', padding: '1rem 3rem', background: '#c9a84c', color: '#0a0a0a', fontWeight: 800, textDecoration: 'none', borderRadius: '4px', textTransform: 'uppercase', letterSpacing: '0.1em', boxShadow: '0 0 25px rgba(201, 168, 76, 0.4)', marginBottom: '1rem' }}>
+          Abrir en ARMORY
+        </a>
+
+        <a id="fallback-btn" href="https://armory31.github.io" style={{ display: 'none', padding: '0.75rem 2rem', background: 'transparent', color: '#c9a84c', fontWeight: 600, textDecoration: 'none', borderRadius: '4px', border: '1px solid #c9a84c', textTransform: 'uppercase' }}>
+          Instalar ARMORY
+        </a>
+
+        <p id="fallback-msg" style={{ display: 'none', color: '#888', marginTop: '1rem', fontSize: '0.9rem' }}>
+          ¿No se abrió la app? Toca el botón de arriba o instálala.
+        </p>
+
+        <script dangerouslySetInnerHTML={{ __html: `
+          (function() {
+            var intentUrl = ${JSON.stringify(intentUrl)};
+            var directUrl = ${JSON.stringify(directUrl)};
+            var startTime = Date.now();
+            var attempted = false;
+
+            function openApp() {
+              if (attempted) return;
+              attempted = true;
+              try { window.location.href = intentUrl; } 
+              catch (e) {
+                try { window.location.href = directUrl; } 
+                catch (e) {
+                  var iframe = document.createElement("iframe");
+                  iframe.style.display = "none";
+                  iframe.src = directUrl;
+                  document.body.appendChild(iframe);
+                }
+              }
+            }
+
+            openApp();
+
+            setTimeout(function() {
+              if (Date.now() - startTime < 3500 && !document.hidden) {
+                var btn = document.getElementById("fallback-btn");
+                var msg = document.getElementById("fallback-msg");
+                if (btn) btn.style.display = "inline-block";
+                if (msg) msg.style.display = "block";
+              }
+            }, 2500);
+
+            window.addEventListener("focus", function() {
+              if (Date.now() - startTime > 2000) {
+                var btn = document.getElementById("fallback-btn");
+                var msg = document.getElementById("fallback-msg");
+                if (btn) btn.style.display = "inline-block";
+                if (msg) msg.style.display = "block";
+              }
+            });
+          })();
+        `}} />
+      </div>
+    );
+  }
+  // === FIN TOGETHER ===
   return (
     <div style={{
       minHeight: '100vh', display: 'flex', flexDirection: 'column',
