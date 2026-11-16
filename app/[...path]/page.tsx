@@ -108,8 +108,8 @@ export default function SharePage({ params, searchParams }: any) {
       );
     }
     
-    const intentUrl = `intent://together/${togetherCode}#Intent;scheme=armory;package=com.ruben.spotitube;S.browser_fallback_url=${encodeURIComponent('https://armory31.github.io')};end`;
-    const directUrl = `armory://together/${togetherCode}`;
+  const intentUrl = `intent://together/${togetherCode}#Intent;scheme=armory;end`;
+  const directUrl = `armory://together/${togetherCode}`;
 
     return (
       <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: '#0a0a0a', color: '#fff', fontFamily: 'sans-serif', textAlign: 'center', padding: '2rem' }}>
@@ -123,7 +123,7 @@ export default function SharePage({ params, searchParams }: any) {
         <a href={intentUrl} style={{ display: 'inline-block', padding: '1rem 3rem', background: '#c9a84c', color: '#0a0a0a', fontWeight: 800, textDecoration: 'none', borderRadius: '4px', textTransform: 'uppercase', letterSpacing: '0.1em', boxShadow: '0 0 25px rgba(201, 168, 76, 0.4)', marginBottom: '1rem' }}>
           Abrir en ARMORY
         </a>
-
+        <a href={directUrl} style={{ display:'block', marginTop:'12px', color:'#888', fontSize:'0.85rem' }}>Probar esquema directo</a>
         <a id="fallback-btn" href="https://armory31.github.io" style={{ display: 'none', padding: '0.75rem 2rem', background: 'transparent', color: '#c9a84c', fontWeight: 600, textDecoration: 'none', borderRadius: '4px', border: '1px solid #c9a84c', textTransform: 'uppercase' }}>
           Instalar ARMORY
         </a>
